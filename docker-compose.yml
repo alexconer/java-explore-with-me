@@ -33,4 +33,20 @@ services:
       - "8080:8080"
     depends_on:
       - stats-server
+      - ewm-db
+
+  ewm-db:
+    image: postgres:16.1
+    container_name: ewm-db
+    ports:
+      - "6542:5432"
+    environment:
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=dbuser
+      - POSTGRES_DB=ewm-db
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
 
