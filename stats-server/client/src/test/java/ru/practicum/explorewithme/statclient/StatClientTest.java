@@ -12,7 +12,6 @@ import ru.practicum.explorewithme.statclient.client.StatClient;
 
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
