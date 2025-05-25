@@ -15,7 +15,7 @@ import java.util.Map;
 @Service
 public class StatClient extends BaseClient {
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     public StatClient(@Value("${stat-server.url}") String serverUrl, RestTemplateBuilder builder) {
