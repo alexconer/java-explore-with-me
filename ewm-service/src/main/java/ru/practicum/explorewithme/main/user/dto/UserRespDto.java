@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.main.admin.dto;
+package ru.practicum.explorewithme.main.user.dto;
 
 import lombok.Builder;
 import lombok.Data;

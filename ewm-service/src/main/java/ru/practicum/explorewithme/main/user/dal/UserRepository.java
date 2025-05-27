@@ -1,9 +1,9 @@
-package ru.practicum.explorewithme.main.admin.dal;
+package ru.practicum.explorewithme.main.user.dal;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.explorewithme.main.admin.model.User;
+import ru.practicum.explorewithme.main.user.model.User;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,7 +1,7 @@
-package ru.practicum.explorewithme.main.admin.dto;
+package ru.practicum.explorewithme.main.user.dto;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.explorewithme.main.admin.model.User;
+import ru.practicum.explorewithme.main.user.model.User;
 
 @UtilityClass
 public class UserMapper {

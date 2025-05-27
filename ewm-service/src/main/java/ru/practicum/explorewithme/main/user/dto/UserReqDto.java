@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.main.admin.dto;
+package ru.practicum.explorewithme.main.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

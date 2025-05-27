@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.main.admin.model;
+package ru.practicum.explorewithme.main.user.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

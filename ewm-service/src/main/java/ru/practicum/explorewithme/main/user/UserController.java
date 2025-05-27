@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.main.admin;
+package ru.practicum.explorewithme.main.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.practicum.explorewithme.main.admin.dto.UserReqDto;
-import ru.practicum.explorewithme.main.admin.dto.UserRespDto;
-import ru.practicum.explorewithme.main.admin.service.UserService;
+import ru.practicum.explorewithme.main.user.dto.UserReqDto;
+import ru.practicum.explorewithme.main.user.dto.UserRespDto;
+import ru.practicum.explorewithme.main.user.service.UserService;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 @Slf4j
-public class AdminController {
+public class UserController {
     private final UserService userService;
 
     @PostMapping("/users")

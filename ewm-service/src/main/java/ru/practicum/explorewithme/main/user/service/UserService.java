@@ -1,4 +1,4 @@
-package ru.practicum.explorewithme.main.admin.service;
+package ru.practicum.explorewithme.main.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.main.exception.ConflictException;
 import ru.practicum.explorewithme.main.exception.NotFoundException;
-import ru.practicum.explorewithme.main.admin.dal.UserRepository;
-import ru.practicum.explorewithme.main.admin.dto.UserReqDto;
-import ru.practicum.explorewithme.main.admin.dto.UserRespDto;
-import ru.practicum.explorewithme.main.admin.dto.UserMapper;
-import ru.practicum.explorewithme.main.admin.model.User;
+import ru.practicum.explorewithme.main.user.dal.UserRepository;
+import ru.practicum.explorewithme.main.user.dto.UserReqDto;
+import ru.practicum.explorewithme.main.user.dto.UserRespDto;
+import ru.practicum.explorewithme.main.user.dto.UserMapper;
+import ru.practicum.explorewithme.main.user.model.User;
 
 import java.util.List;
 
