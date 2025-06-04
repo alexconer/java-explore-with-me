@@ -1,5 +1,6 @@
 package ru.practicum.explorewithme.main.event.controller.common;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +35,19 @@ public class EventPublicController {
                                               @RequestParam(defaultValue = "false") Boolean onlyAvailable,
                                               @RequestParam(defaultValue = "EVENT_DATE") Sorting sort,
                                               @RequestParam(defaultValue = "0") Integer from,
-                                              @RequestParam(defaultValue = "10") Integer size) {
+                                              @RequestParam(defaultValue = "10") Integer size,
+                                              HttpServletRequest request) {
         log.info("Получен запрос на поиск событий с возможностью фильтрации");
+
+        ResponseEntity<Object> actualResponse = statClient.save("ewm-service", request.getRequestURI(), request.getRemoteAddr());
+
         return eventService.getPublicEventsByParams(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
     }
 
     @GetMapping("/{eventId}")
-    public EventFullDto getEventPublic(@PathVariable("eventId") Long eventId) {
+    public EventFullDto getEventPublic(@PathVariable("eventId") Long eventId, HttpServletRequest request) {
 
-        ResponseEntity<Object> actualResponse = statClient.save("ewm-service", "/test", "127.0.0.1");
+        ResponseEntity<Object> actualResponse = statClient.save("ewm-service", request.getRequestURI(), request.getRemoteAddr());
 
         log.info("Получен запрос на поиск подробной информации об опубликованном событии: eventId = {}", eventId);
         return eventService.getEventPublic(eventId);

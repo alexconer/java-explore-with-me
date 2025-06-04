@@ -24,7 +24,7 @@ public class EventMapper {
         }
         event.setState(EventState.PENDING);
         event.setConfirmedRequests(0);
-        event.setViews(0);
+        event.setViews(0L);
         return event;
     }
 

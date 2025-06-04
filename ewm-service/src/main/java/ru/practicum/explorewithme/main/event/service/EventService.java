@@ -1,11 +1,14 @@
 package ru.practicum.explorewithme.main.event.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.main.category.dal.CategoryRepository;
@@ -29,6 +32,8 @@ import ru.practicum.explorewithme.main.request.dto.RequestStatusUpdateDto;
 import ru.practicum.explorewithme.main.request.service.RequestService;
 import ru.practicum.explorewithme.main.user.dal.UserRepository;
 import ru.practicum.explorewithme.main.user.model.User;
+import ru.practicum.explorewithme.statclient.client.StatClient;
+import ru.practicum.explorewithme.statdto.StatDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -43,6 +48,7 @@ public class EventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RequestService requestService;
+    private final StatClient statClient;
 
     @Value("${app.event.minHoursBeforeEventCreation}")
     private int minHoursBeforeEventCreation;
@@ -271,6 +277,16 @@ public class EventService {
 
         if (!event.getState().equals(EventState.PUBLISHED)) {
             throw new NotFoundException("Не найдено событие с идентификатором " + eventId);
+        }
+
+        String[] uris = {"/events/" + eventId};
+        ResponseEntity<Object> actualResponse = statClient.getStats(LocalDateTime.of(1900, 1, 1, 0, 0), LocalDateTime.now(), uris, true);
+
+        if (actualResponse.getStatusCode() == HttpStatus.OK) {
+            ObjectMapper mapper = new ObjectMapper();
+            StatDto[] stats = mapper.convertValue(actualResponse.getBody(), StatDto[].class);
+            event.setViews(stats != null && stats.length != 0 ? stats[0].getHits() : 0);
+            eventRepository.save(event);
         }
 
         return EventMapper.toEventFullDto(event);

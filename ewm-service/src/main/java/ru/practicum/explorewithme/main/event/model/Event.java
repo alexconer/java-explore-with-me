@@ -57,7 +57,7 @@ public class Event {
     @Column(name = "participant_limit")
     private Integer participantLimit;
 
-    private Integer views;
+    private Long views;
     private Boolean paid;
 
     @Column(name = "request_moderation")

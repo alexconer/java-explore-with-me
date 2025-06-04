@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.explorewithme.main.event.dto.EventFullDto;
-import ru.practicum.explorewithme.main.event.dto.EventCreateDto;
 import ru.practicum.explorewithme.main.event.dto.EventUpdateDto;
 import ru.practicum.explorewithme.main.event.service.EventService;
 
