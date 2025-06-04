@@ -1,0 +1,50 @@
+package ru.practicum.explorewithme.main.event.controller.common;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.explorewithme.main.event.dto.EventFullDto;
+import ru.practicum.explorewithme.main.event.model.Sorting;
+import ru.practicum.explorewithme.main.event.service.EventService;
+import ru.practicum.explorewithme.statclient.client.StatClient;
+
+import java.util.List;
+
+@Slf4j
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/events")
+public class EventPublicController {
+    private final EventService eventService;
+    @Autowired
+    private final StatClient statClient;
+
+    @GetMapping
+    public List<EventFullDto> getEventsPublic(@RequestParam(required = false) String text,
+                                              @RequestParam(required = false) List<Long> categories,
+                                              @RequestParam(required = false) Boolean paid,
+                                              @RequestParam(required = false) String rangeStart,
+                                              @RequestParam(required = false) String rangeEnd,
+                                              @RequestParam(defaultValue = "false") Boolean onlyAvailable,
+                                              @RequestParam(defaultValue = "EVENT_DATE") Sorting sort,
+                                              @RequestParam(defaultValue = "0") Integer from,
+                                              @RequestParam(defaultValue = "10") Integer size) {
+        log.info("Получен запрос на поиск событий с возможностью фильтрации");
+        return eventService.getPublicEventsByParams(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+    }
+
+    @GetMapping("/{eventId}")
+    public EventFullDto getEventPublic(@PathVariable("eventId") Long eventId) {
+
+        ResponseEntity<Object> actualResponse = statClient.save("ewm-service", "/test", "127.0.0.1");
+
+        log.info("Получен запрос на поиск подробной информации об опубликованном событии: eventId = {}", eventId);
+        return eventService.getEventPublic(eventId);
+    }
+}

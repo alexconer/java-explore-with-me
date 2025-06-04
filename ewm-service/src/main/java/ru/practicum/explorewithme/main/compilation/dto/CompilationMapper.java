@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.main.compilation.dto;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.explorewithme.main.compilation.model.Compilation;
+import ru.practicum.explorewithme.main.event.dto.EventMapper;
 
 @UtilityClass
 public class CompilationMapper {
@@ -10,6 +11,7 @@ public class CompilationMapper {
                 .id(compilation.getId())
                 .pinned(compilation.getPinned())
                 .title(compilation.getTitle())
+                .events(compilation.getEvents().stream().map(EventMapper::toEventShortDto).toList())
                 .build();
     }
 

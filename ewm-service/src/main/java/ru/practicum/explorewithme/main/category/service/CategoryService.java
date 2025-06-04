@@ -11,10 +11,12 @@ import ru.practicum.explorewithme.main.category.dal.CategoryRepository;
 import ru.practicum.explorewithme.main.category.dto.CategoryDto;
 import ru.practicum.explorewithme.main.category.dto.CategoryMapper;
 import ru.practicum.explorewithme.main.category.model.Category;
+import ru.practicum.explorewithme.main.event.dal.EventRepository;
 import ru.practicum.explorewithme.main.exception.ConflictException;
 import ru.practicum.explorewithme.main.exception.NotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,6 +24,7 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
 
     @Transactional
     public CategoryDto createCategory(CategoryDto categoryDto) {
@@ -35,7 +38,9 @@ public class CategoryService {
     public CategoryDto updateCategory(Long catId, CategoryDto categoryDto) {
         Category oldCcategory = categoryRepository.findById(catId).orElseThrow(() -> new NotFoundException("Категория не найдена"));
 
-        if (categoryRepository.findByName(categoryDto.getName()).isPresent()) {
+        Optional<Category> theSameCategory = categoryRepository.findByName(categoryDto.getName());
+
+        if (theSameCategory.isPresent() && !theSameCategory.get().getId().equals(catId)) {
             throw new ConflictException("Категория с таким названием уже существует");
         }
 
@@ -48,7 +53,9 @@ public class CategoryService {
     public void deleteCategory(Long catId) {
         Category oldCategory = categoryRepository.findById(catId).orElseThrow(() -> new NotFoundException("Категория не найдена"));
 
-        //TODO: добавить проверку на событие
+        if (eventRepository.existsByCategory(oldCategory)) {
+            throw new ConflictException("Нельзя удалить категорию, в которой есть события");
+        }
 
         categoryRepository.deleteById(oldCategory.getId());
     }

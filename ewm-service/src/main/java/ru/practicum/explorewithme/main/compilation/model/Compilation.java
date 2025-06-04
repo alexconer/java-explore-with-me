@@ -1,13 +1,20 @@
 package ru.practicum.explorewithme.main.compilation.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.explorewithme.main.event.model.Event;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,5 +29,7 @@ public class Compilation {
     private String title;
     private Boolean pinned;
 
-    //TODO: Связь с событиями
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "compilation_events", joinColumns = @JoinColumn(name = "compilation_id"), inverseJoinColumns = @JoinColumn(name = "event_id"))
+    private List<Event> events;
 }

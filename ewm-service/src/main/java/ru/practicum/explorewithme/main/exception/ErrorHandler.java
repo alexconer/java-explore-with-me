@@ -31,6 +31,13 @@ public class ErrorHandler {
         return makeError(HttpStatus.BAD_REQUEST.name(),  ex.getCause() != null ? ex.getCause().getMessage() : HttpStatus.BAD_REQUEST.getReasonPhrase(), errors.toString());
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({BadRequestException.class})
+    public Map<String, String> handleBadRequestException(BadRequestException ex) {
+        log.error("Неверный запрос: {} ", ex.getMessage());
+        return makeError(HttpStatus.BAD_REQUEST.name(),  ex.getCause() != null ? ex.getCause().getMessage() : HttpStatus.BAD_REQUEST.getReasonPhrase(), ex.getMessage());
+    }
+
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler({DataIntegrityViolationException.class})
     public Map<String, String> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {

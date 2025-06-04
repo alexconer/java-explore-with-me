@@ -13,6 +13,8 @@ import ru.practicum.explorewithme.main.compilation.dto.CompilationDto;
 import ru.practicum.explorewithme.main.compilation.dto.CompilationMapper;
 import ru.practicum.explorewithme.main.compilation.dto.CompilationReqDto;
 import ru.practicum.explorewithme.main.compilation.model.Compilation;
+import ru.practicum.explorewithme.main.event.dal.EventRepository;
+import ru.practicum.explorewithme.main.event.model.Event;
 import ru.practicum.explorewithme.main.exception.ConflictException;
 import ru.practicum.explorewithme.main.exception.NotFoundException;
 
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class CompilationService {
 
     private final CompilationRepository compilationRepository;
+    private final EventRepository eventRepository;
 
     @Transactional
     public CompilationDto createCompilation(CompilationReqDto compilationDto) {
@@ -35,7 +38,15 @@ public class CompilationService {
             compilationDto.setPinned(false);
         }
 
-        return CompilationMapper.fromCompilation(compilationRepository.save(CompilationMapper.toCompilation(compilationDto)));
+        Compilation compilation = CompilationMapper.toCompilation(compilationDto);
+
+        List<Event> events = List.of();
+        if (compilationDto.getEvents() != null && !compilationDto.getEvents().isEmpty()) {
+            events = eventRepository.findAllById(compilationDto.getEvents());
+        }
+        compilation.setEvents(events);
+
+        return CompilationMapper.fromCompilation(compilationRepository.save(compilation));
     }
 
     @Transactional
@@ -52,6 +63,10 @@ public class CompilationService {
         }
         if (compilationDto.getTitle() != null) {
             oldCompilation.setTitle(compilationDto.getTitle());
+        }
+        if (compilationDto.getEvents() != null && !compilationDto.getEvents().isEmpty()) {
+            List<Event> events = eventRepository.findAllById(compilationDto.getEvents());
+            oldCompilation.setEvents(events);
         }
         return CompilationMapper.fromCompilation(compilationRepository.save(oldCompilation));
     }
