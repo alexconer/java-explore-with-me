@@ -1,0 +1,24 @@
+package ru.practicum.explorewithme.main.compilation.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Builder;
+import lombok.Data;
+
+import java.util.List;
+
+
+@Data
+@Builder
+public class CompilationCreateDto {
+    @Size(min = 1, message = "Минимальная длина поля 20 символов")
+    @Size(max = 50, message = "Максимальная длина поля 2000 символов")
+    @NotNull(message = "Название подборки не может быть пустым")
+    @NotBlank(message = "Название подборки не может быть пустым")
+    private String title;
+
+    private Boolean pinned = false;
+
+    private List<Long> events;
+}

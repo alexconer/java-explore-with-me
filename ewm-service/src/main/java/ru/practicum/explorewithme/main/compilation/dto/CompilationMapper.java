@@ -15,7 +15,7 @@ public class CompilationMapper {
                 .build();
     }
 
-    public Compilation toCompilation(CompilationReqDto dto) {
+    public Compilation toCompilation(CompilationCreateDto dto) {
         Compilation compilation = new Compilation();
         compilation.setTitle(dto.getTitle());
         compilation.setPinned(dto.getPinned());

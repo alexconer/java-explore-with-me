@@ -10,7 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.main.compilation.dal.CompilationRepository;
 import ru.practicum.explorewithme.main.compilation.dto.CompilationDto;
 import ru.practicum.explorewithme.main.compilation.dto.CompilationMapper;
-import ru.practicum.explorewithme.main.compilation.dto.CompilationReqDto;
+import ru.practicum.explorewithme.main.compilation.dto.CompilationCreateDto;
+import ru.practicum.explorewithme.main.compilation.dto.CompilationUpdateDto;
 import ru.practicum.explorewithme.main.compilation.model.Compilation;
 import ru.practicum.explorewithme.main.event.dal.EventRepository;
 import ru.practicum.explorewithme.main.event.model.Event;
@@ -29,7 +30,7 @@ public class CompilationService {
     private final EventRepository eventRepository;
 
     @Transactional
-    public CompilationDto createCompilation(CompilationReqDto compilationDto) {
+    public CompilationDto createCompilation(CompilationCreateDto compilationDto) {
         if (compilationRepository.findByTitle(compilationDto.getTitle()).isPresent()) {
             throw new ConflictException("Подборка с таким названием уже существует");
         }
@@ -49,7 +50,7 @@ public class CompilationService {
     }
 
     @Transactional
-    public CompilationDto updateCompilation(Long compId, CompilationReqDto compilationDto) {
+    public CompilationDto updateCompilation(Long compId, CompilationUpdateDto compilationDto) {
         Compilation oldCompilation = compilationRepository.findById(compId).orElseThrow(() -> new NotFoundException("Подборка не найдена"));
 
         Optional<Compilation> theSameCompilation = compilationRepository.findByTitle(compilationDto.getTitle());

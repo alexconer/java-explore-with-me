@@ -96,10 +96,10 @@ public class EventService {
             event.setDescription(reqDto.getDescription());
         }
         if (reqDto.getEventDate() != null) {
-            if (LocalDateTime.now().plusHours(minHoursBeforeEventCreation).isAfter(event.getEventDate())) {
+            if (LocalDateTime.now().plusHours(minHoursBeforeEventCreation).isAfter(reqDto.getEventDate())) {
                 throw new BadRequestException("Время начала мероприятия должно быть не раньше чем через " + minHoursBeforeEventCreation + " часа");
             }
-            event.setEventDate(event.getEventDate());
+            event.setEventDate(reqDto.getEventDate());
         }
         if (reqDto.getPaid() != null) {
             event.setPaid(reqDto.getPaid());
@@ -167,12 +167,7 @@ public class EventService {
             return null;
         }
 
-        RequestStatusDto statusUpdateDto = requestService.updateRequestsStatus(event, userId, dto);
-        if (!statusUpdateDto.getConfirmedRequests().isEmpty()) {
-            event.setConfirmedRequests(event.getConfirmedRequests() + statusUpdateDto.getConfirmedRequests().size());
-            eventRepository.save(event);
-        }
-        return statusUpdateDto;
+        return requestService.updateRequestsStatus(event, userId, dto);
     }
 
     public List<EventFullDto> getEventsByParams(List<Long> users, List<Long> categories, List<String> states, String rangeStart, String rangeEnd, Integer from, Integer size) {
@@ -184,6 +179,14 @@ public class EventService {
         if (rangeEnd != null) {
             dateTo = LocalDateTime.parse(rangeEnd, formatter);
         }
+
+        if (categories != null){
+            List<Category> existCategory = categoryRepository.findAllByIdIn(categories);
+            if (existCategory != null && existCategory.isEmpty()) {
+                throw new BadRequestException("Не найдена категория с идентификатором " + categories);
+            }
+        }
+
         Pageable pageable = PageRequest.of(from/size, size, Sort.by("id"));
         return eventRepository.getEventsByFilter(users, categories, states, dateFrom, dateTo, pageable).stream()
                 .map(EventMapper::toEventFullDto)
@@ -205,8 +208,8 @@ public class EventService {
             event.setDescription(dto.getDescription());
         }
         if (dto.getEventDate() != null) {
-            if (LocalDateTime.now().plusHours(minHoursBeforeEventUpdate).isAfter(event.getEventDate())) {
-                throw new ConflictException("Время начала мероприятия должно быть не раньше чем через " + minHoursBeforeEventUpdate + " часа");
+            if (LocalDateTime.now().plusHours(minHoursBeforeEventUpdate).isAfter(dto.getEventDate())) {
+                throw new BadRequestException("Время начала мероприятия должно быть не раньше чем через " + minHoursBeforeEventUpdate + " часа");
             }
             event.setEventDate(dto.getEventDate());
         }
@@ -262,6 +265,13 @@ public class EventService {
         if (text != null) {
             text = text.toLowerCase();
         }
+        if (categories != null){
+            List<Category> existCategory = categoryRepository.findAllByIdIn(categories);
+            if (existCategory != null && existCategory.isEmpty()) {
+                throw new BadRequestException("Не найдена категория с идентификатором " + categories);
+            }
+        }
+
         Pageable pageable = PageRequest.of(from/size, size, Sort.by("id"));
         List<Event> events = sort == Sorting.EVENT_DATE ?
                 eventRepository.getPublicEventsByParamsSortedByEventDate(text, categories, paid, dateFrom, dateTo, onlyAvailable, pageable) :
@@ -282,7 +292,7 @@ public class EventService {
         String[] uris = {"/events/" + eventId};
         ResponseEntity<Object> actualResponse = statClient.getStats(LocalDateTime.of(1900, 1, 1, 0, 0), LocalDateTime.now(), uris, true);
 
-        if (actualResponse.getStatusCode() == HttpStatus.OK) {
+        if (actualResponse.getStatusCode() == HttpStatus.OK && actualResponse.getBody() != null) {
             ObjectMapper mapper = new ObjectMapper();
             StatDto[] stats = mapper.convertValue(actualResponse.getBody(), StatDto[].class);
             event.setViews(stats != null && stats.length != 0 ? stats[0].getHits() : 0);

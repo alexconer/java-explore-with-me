@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.statdto.HitDto;
 import ru.practicum.explorewithme.statdto.StatDto;
 import ru.practicum.explorewithme.statserver.dal.StatsRepository;
+import ru.practicum.explorewithme.statserver.exception.BadRequestException;
 import ru.practicum.explorewithme.statserver.mapper.StatsMapper;
 import ru.practicum.explorewithme.statserver.model.StatWithHits;
 
@@ -26,6 +27,15 @@ public class StatsService {
     }
 
     public Collection<StatDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+
+        if (start == null || end == null) {
+            throw new BadRequestException("Дата начала и конца не могут быть пустыми");
+        }
+
+        if (start.isAfter(end)) {
+            throw new BadRequestException("Дата начала не может быть больше даты конца");
+        }
+
         Collection<StatWithHits> stats = unique ? statsRepository.findByParamsAndUniqueByIp(start, end, uris) : statsRepository.findByParams(start, end, uris);
         return stats.stream()
                 .map(StatsMapper::statDtoFromStatWithHits)
