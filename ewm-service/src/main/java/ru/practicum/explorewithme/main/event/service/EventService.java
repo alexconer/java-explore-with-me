@@ -119,7 +119,7 @@ public class EventService {
         }
         if (reqDto.getStateAction() != null) {
 
-            event.setState(switch (reqDto.getStateAction()) {
+            event.setState( switch (reqDto.getStateAction()) {
                 case SEND_TO_REVIEW -> EventState.PENDING;
                 case CANCEL_REVIEW -> EventState.CANCELED;
                 default -> throw new IllegalStateException("Unexpected value: " + reqDto.getStateAction());
@@ -131,7 +131,7 @@ public class EventService {
     public List<EventShortDto> getAllUserEvents(Long userId, Integer from, Integer size) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Не найден пользователь с идентификатором " + userId));
 
-        Pageable pageable = PageRequest.of(from/size, size, Sort.by("id"));
+        Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         Page<Event> pagedResult = eventRepository.findByInitiator(user, pageable);
         return pagedResult.stream()
                 .map(EventMapper::toEventShortDto)
@@ -180,14 +180,14 @@ public class EventService {
             dateTo = LocalDateTime.parse(rangeEnd, formatter);
         }
 
-        if (categories != null){
+        if (categories != null) {
             List<Category> existCategory = categoryRepository.findAllByIdIn(categories);
             if (existCategory != null && existCategory.isEmpty()) {
                 throw new BadRequestException("Не найдена категория с идентификатором " + categories);
             }
         }
 
-        Pageable pageable = PageRequest.of(from/size, size, Sort.by("id"));
+        Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         return eventRepository.getEventsByFilter(users, categories, states, dateFrom, dateTo, pageable).stream()
                 .map(EventMapper::toEventFullDto)
                 .toList();
@@ -229,7 +229,7 @@ public class EventService {
             event.setLocationLat(dto.getLocation().getLat());
             event.setLocationLon(dto.getLocation().getLon());
         }
-        if (dto.getStateAction() != null ) {
+        if (dto.getStateAction() != null) {
             switch (dto.getStateAction()) {
                 case StateAction.PUBLISH_EVENT:
                     if (event.getState() != EventState.PENDING) {
@@ -265,14 +265,14 @@ public class EventService {
         if (text != null) {
             text = text.toLowerCase();
         }
-        if (categories != null){
+        if (categories != null) {
             List<Category> existCategory = categoryRepository.findAllByIdIn(categories);
             if (existCategory != null && existCategory.isEmpty()) {
                 throw new BadRequestException("Не найдена категория с идентификатором " + categories);
             }
         }
 
-        Pageable pageable = PageRequest.of(from/size, size, Sort.by("id"));
+        Pageable pageable = PageRequest.of(from / size, size, Sort.by("id"));
         List<Event> events = sort == Sorting.EVENT_DATE ?
                 eventRepository.getPublicEventsByParamsSortedByEventDate(text, categories, paid, dateFrom, dateTo, onlyAvailable, pageable) :
                 eventRepository.getEventsByParamsSortedByViews(text, categories, paid, dateFrom, dateTo, onlyAvailable, pageable);
