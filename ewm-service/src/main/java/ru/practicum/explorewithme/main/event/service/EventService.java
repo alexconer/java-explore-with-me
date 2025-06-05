@@ -119,11 +119,13 @@ public class EventService {
         }
         if (reqDto.getStateAction() != null) {
 
-            event.setState(switch (reqDto.getStateAction()) {
+            EventState state = switch (reqDto.getStateAction()) {
                 case SEND_TO_REVIEW -> EventState.PENDING;
                 case CANCEL_REVIEW -> EventState.CANCELED;
                 default -> throw new IllegalStateException("Unexpected value: " + reqDto.getStateAction());
-            });
+            };
+
+            event.setState(state);
         }
         return EventMapper.toEventFullDto(eventRepository.save(event));
     }
