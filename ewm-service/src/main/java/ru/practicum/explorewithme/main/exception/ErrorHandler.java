@@ -5,6 +5,7 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestValueException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -29,6 +30,15 @@ public class ErrorHandler {
         log.error("Ошибка валидации: {} ", errors);
 
         return makeError(HttpStatus.BAD_REQUEST.name(),  ex.getCause() != null ? ex.getCause().getMessage() : HttpStatus.BAD_REQUEST.getReasonPhrase(), errors.toString());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({MissingRequestValueException.class})
+    public Map<String, String> handleMissingRequestValueException(MissingRequestValueException ex) {
+
+        log.error("Ошибка валидации: {} ", ex.getMessage());
+
+        return makeError(HttpStatus.BAD_REQUEST.name(),  ex.getCause() != null ? ex.getCause().getMessage() : HttpStatus.BAD_REQUEST.getReasonPhrase(), ex.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
