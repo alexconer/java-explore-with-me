@@ -59,6 +59,13 @@ public class ErrorHandler {
         return makeError(HttpStatus.NOT_FOUND.name(), ex.getCause() != null ? ex.getCause().getMessage() : HttpStatus.NOT_FOUND.getReasonPhrase(), ex.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({Throwable.class})
+    public Map<String, String> handleThrowable(Throwable throwable) {
+        log.error("Ошибка сервера: {} ", throwable.getMessage());
+        return makeError(HttpStatus.INTERNAL_SERVER_ERROR.name(), throwable.getCause() != null ? throwable.getCause().getMessage() : HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), throwable.getMessage());
+    }
+
     private Map<String, String> makeError(String status, String reason, String message) {
         Map<String, String> errResponse = new HashMap<>();
         errResponse.put("status", status);

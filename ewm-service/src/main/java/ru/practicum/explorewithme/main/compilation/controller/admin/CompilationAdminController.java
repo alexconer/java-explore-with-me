@@ -33,7 +33,6 @@ public class CompilationAdminController {
     }
 
     @PatchMapping("/{compId}")
-    @ResponseStatus(HttpStatus.OK)
     public CompilationDto updateCompilation(@PathVariable Long compId, @Valid @RequestBody CompilationUpdateDto compilationDto) {
         log.info("Получен запрос на обновление подборки с данными: {}", compilationDto);
         return compilationService.updateCompilation(compId, compilationDto);

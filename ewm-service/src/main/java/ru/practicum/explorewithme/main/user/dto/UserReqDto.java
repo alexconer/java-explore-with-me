@@ -12,15 +12,13 @@ import lombok.Data;
 @Builder
 public class UserReqDto {
 
-    @Size(min = 2, message = "Минимальная длина поля 20 символов")
-    @Size(max = 250, message = "Максимальная длина поля 2000 символов")
+    @Size(min = 2, max = 250, message = "Длина имени должна быть от 2 до 250 символов")
     @NotNull(message = "Имя пользователя не может быть пустым")
     @NotBlank(message = "Имя пользователя не может быть пустым")
     private String name;
 
     @NotEmpty(message = "Email пользователя не может быть пустым")
-    @Size(min = 6, message = "Минимальная длина поля 20 символов")
-    @Size(max = 254, message = "Максимальная длина поля 2000 символов")
+    @Size(min = 6, max = 254, message = "Длина email-адреса должна быть от 6 до 254 символов")
     @Email(message = "Некорректный email")
     private String email;
 }

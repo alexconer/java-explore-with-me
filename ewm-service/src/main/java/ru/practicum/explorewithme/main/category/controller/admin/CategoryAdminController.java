@@ -31,7 +31,6 @@ public class CategoryAdminController {
     }
 
     @PatchMapping("/{catId}")
-    @ResponseStatus(HttpStatus.OK)
     public CategoryDto updateCategory(@PathVariable Long catId, @Valid @RequestBody CategoryDto categoryDto) {
         log.info("Получен запрос на обновление категории с данными: {}", categoryDto);
         return categoryService.updateCategory(catId, categoryDto);

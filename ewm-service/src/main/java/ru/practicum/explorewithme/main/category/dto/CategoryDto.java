@@ -10,8 +10,7 @@ import lombok.Data;
 @Builder
 public class CategoryDto {
     private Long id;
-    @Size(min = 1, message = "Минимальная длина поля 20 символов")
-    @Size(max = 50, message = "Максимальная длина поля 2000 символов")
+    @Size(min = 1, max = 50, message = "Длина названия не должна быть от 1 до 50 символов")
     @NotNull(message = "Название категории не может быть пустым")
     @NotBlank(message = "Название категории не может быть пустым")
     private String name;

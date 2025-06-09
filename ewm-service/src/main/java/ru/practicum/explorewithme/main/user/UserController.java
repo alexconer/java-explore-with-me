@@ -1,5 +1,7 @@
 package ru.practicum.explorewithme.main.user;
 
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import jakarta.validation.Valid;
@@ -35,8 +37,8 @@ public class UserController {
 
     @GetMapping("/users")
     public List<UserRespDto> getUsers(@RequestParam(required = false) List<Long> ids,
-                                      @RequestParam(defaultValue = "0") Integer from,
-                                      @RequestParam(defaultValue = "10") Integer size) {
+                                      @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                      @RequestParam(defaultValue = "10") @Positive Integer size) {
 
         log.info("Получен запрос на получение пользователей c параметрами: ids={}, from={}, size={}", ids, from, size);
         return userService.getUsers(ids, from, size);

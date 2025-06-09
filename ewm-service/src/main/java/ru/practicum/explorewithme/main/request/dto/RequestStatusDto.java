@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 @Builder
 public class RequestStatusDto {
-    List<RequestDto> confirmedRequests;
-    List<RequestDto> rejectedRequests;
+    private List<RequestDto> confirmedRequests;
+    private List<RequestDto> rejectedRequests;
 }

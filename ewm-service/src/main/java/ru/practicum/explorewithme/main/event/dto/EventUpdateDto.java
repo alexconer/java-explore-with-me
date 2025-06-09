@@ -13,14 +13,12 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 public class EventUpdateDto {
-    @Size(min = 20, message = "Минимальная длина поля аннотация 20 символов")
-    @Size(max = 2000, message = "Максимальная длина поля аннотация 2000 символов")
+    @Size(min = 20, max = 2000, message = "Длина названия должна быть от 20 до 2000 символов")
     private String annotation;
 
     private Long category;
 
-    @Size(min = 20, message = "Минимальная длина поля описание 20 символов")
-    @Size(max = 7000, message = "Максимальная длина поля описание 7000 символов")
+    @Size(min = 20, max = 7000, message = "Длина описания должна быть от 20 до 7000 символов")
     private String description;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -33,8 +31,7 @@ public class EventUpdateDto {
     private Integer participantLimit;
     private Boolean requestModeration;
 
-    @Size(min = 3, message = "Минимальная длина поля заголовок 3 символов")
-    @Size(max = 120, message = "Максимальная длина поля заголовок 120 символов")
+    @Size(min = 3, max = 120, message = "Длина заголовка должна быть от 3 до 120 символов")
     private String title;
 
     private StateAction stateAction;

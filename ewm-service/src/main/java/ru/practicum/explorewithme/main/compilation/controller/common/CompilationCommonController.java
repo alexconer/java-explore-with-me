@@ -1,5 +1,7 @@
 package ru.practicum.explorewithme.main.compilation.controller.common;
 
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +24,8 @@ public class CompilationCommonController {
 
     @GetMapping
     public List<CompilationDto> getCompilations(@RequestParam(required = false) Boolean pinned,
-                                                @RequestParam(defaultValue = "0") int from,
-                                                @RequestParam(defaultValue = "10") int size) {
+                                                @RequestParam(defaultValue = "0") @PositiveOrZero int from,
+                                                @RequestParam(defaultValue = "10") @Positive int size) {
         log.info("Получен запрос на получение списка подборок с параметрами: pinned={}, from={}, size={}", pinned, from, size);
         return compilationService.getCompilations(pinned, from, size);
     }

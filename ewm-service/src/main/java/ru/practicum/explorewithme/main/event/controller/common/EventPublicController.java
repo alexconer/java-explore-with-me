@@ -1,9 +1,10 @@
 package ru.practicum.explorewithme.main.event.controller.common;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,6 @@ import java.util.List;
 @RequestMapping("/events")
 public class EventPublicController {
     private final EventService eventService;
-    @Autowired
     private final StatClient statClient;
 
     @GetMapping
@@ -34,8 +34,8 @@ public class EventPublicController {
                                               @RequestParam(required = false) String rangeEnd,
                                               @RequestParam(defaultValue = "false") Boolean onlyAvailable,
                                               @RequestParam(defaultValue = "EVENT_DATE") Sorting sort,
-                                              @RequestParam(defaultValue = "0") Integer from,
-                                              @RequestParam(defaultValue = "10") Integer size,
+                                              @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                              @RequestParam(defaultValue = "10") @Positive Integer size,
                                               HttpServletRequest request) {
         log.info("Получен запрос на поиск событий с возможностью фильтрации");
 

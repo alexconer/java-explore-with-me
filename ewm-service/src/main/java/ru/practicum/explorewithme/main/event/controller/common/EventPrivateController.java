@@ -1,6 +1,8 @@
 package ru.practicum.explorewithme.main.event.controller.common;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -50,8 +52,8 @@ public class EventPrivateController {
 
     @GetMapping
     public List<EventShortDto> getUserEventsPrivate(@PathVariable("userId") Long userId,
-                                                    @RequestParam(defaultValue = "0") Integer from,
-                                                    @RequestParam(defaultValue = "10") Integer size) {
+                                                    @RequestParam(defaultValue = "0") @PositiveOrZero Integer from,
+                                                    @RequestParam(defaultValue = "10") @Positive Integer size) {
         log.info("Получен запрос на поиск событий: userId={}", userId);
         return eventService.getAllUserEvents(userId, from, size);
     }
