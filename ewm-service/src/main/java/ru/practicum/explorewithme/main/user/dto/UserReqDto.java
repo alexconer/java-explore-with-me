@@ -13,7 +13,6 @@ import lombok.Data;
 public class UserReqDto {
 
     @Size(min = 2, max = 250, message = "Длина имени должна быть от 2 до 250 символов")
-    @NotNull(message = "Имя пользователя не может быть пустым")
     @NotBlank(message = "Имя пользователя не может быть пустым")
     private String name;
 

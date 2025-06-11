@@ -37,13 +37,13 @@ public class CommentAdminController {
     }
 
     @DeleteMapping("/{commentId}")
-    public void deleteCommentAdmin(@PathVariable("commentId") Long commentId) {
+    public void deleteCommentAdmin(Long commentId) {
         log.info("Получен запрос на удаление комментария с id = {}", commentId);
         commentService.deleteCommentAdmin(commentId);
     }
 
     @GetMapping("/{commentId}")
-    public CommentFullDto getCommentByIdAdmin(@PathVariable("commentId") Long commentId) {
+    public CommentFullDto getCommentByIdAdmin(Long commentId) {
         log.info("Получен запрос на получение комментария с id = {}", commentId);
         return commentService.getCommentByIdAdmin(commentId);
     }

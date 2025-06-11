@@ -46,30 +46,18 @@ public class CommentService {
 
     @Transactional
     public CommentFullDto updateComment(Long userId, Long eventId, Long commentId, CommentCreateDto dto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Не найден пользователь с идентификатором " + userId));
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Не найдено событие с идентификатором " + eventId));
+        checkCommentAuthor(userId, eventId, commentId);
+
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Не найден комментарий с идентификатором " + commentId));
-        if (!comment.getAuthor().getId().equals(user.getId())) {
-            throw new BadRequestException("Вы не являетесь автором комментария");
-        }
-        if (comment.isAccepted()) {
-            throw new BadRequestException("Вы не можете редактировать опубликованный комментарий");
-        }
+
         comment.setUserMessage(dto.getMessage());
         return CommentMapper.toCommentFullDto(commentRepository.save(comment));
     }
 
     @Transactional
     public void deleteComment(Long userId, Long eventId, Long commentId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Не найден пользователь с идентификатором " + userId));
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Не найдено событие с идентификатором " + eventId));
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Не найден комментарий с идентификатором " + commentId));
-        if (!comment.getAuthor().getId().equals(user.getId())) {
-            throw new BadRequestException("Вы не являетесь автором комментария");
-        }
-        if (comment.isAccepted()) {
-            throw new BadRequestException("Вы не можете удалить опубликованный комментарий");
-        }
+        checkCommentAuthor(userId, eventId, commentId);
+
         commentRepository.deleteById(commentId);
     }
 
@@ -85,15 +73,10 @@ public class CommentService {
 
 
     public CommentFullDto getCommentById(Long userId, Long eventId, Long commentId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Не найден пользователь с идентификатором " + userId));
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Не найдено событие с идентификатором " + eventId));
+        checkCommentAuthor(userId, eventId, commentId);
+
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Не найден комментарий с идентификатором " + commentId));
-        if (!comment.getAuthor().getId().equals(user.getId())) {
-            throw new BadRequestException("Вы не являетесь автором комментария");
-        }
-        if (!comment.getEvent().getId().equals(event.getId())) {
-            throw new BadRequestException("Комментарий не принадлежит событию");
-        }
+
         return CommentMapper.toCommentFullDto(comment);
     }
 
@@ -132,5 +115,18 @@ public class CommentService {
         return commentRepository.findAllByEventId(eventId).stream()
                 .map(CommentMapper::toCommentShortDto)
                 .toList();
+    }
+
+    private void checkCommentAuthor(Long userId, Long eventId, Long commentId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Не найден пользователь с идентификатором " + userId));
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Не найдено событие с идентификатором " + eventId));
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Не найден комментарий с идентификатором " + commentId));
+        if (!comment.getAuthor().getId().equals(user.getId())) {
+            throw new BadRequestException("Вы не являетесь автором комментария");
+        }
+        if (comment.isAccepted()) {
+            throw new BadRequestException("Вы не можете удалить опубликованный комментарий");
+        }
     }
 }

@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class EventCreateDto {
     @Size(min = 20, max = 2000, message = "Длина аннотации должна быть от 20 до 2000 символов")
-    @NotNull(message = "Краткое описание не может быть пустым")
     @NotBlank(message = "Краткое описание не может быть пустым")
     private String annotation;
 
@@ -23,7 +22,6 @@ public class EventCreateDto {
     private Long category;
 
     @Size(min = 20, max = 7000, message = "Длина описания должна быть от 20 до 7000 символов")
-    @NotNull(message = "Описание не может быть пустым")
     @NotBlank(message = "Описание не может быть пустым")
     private String description;
 
@@ -40,7 +38,6 @@ public class EventCreateDto {
     private Boolean requestModeration;
 
     @Size(min = 3, max = 120, message = "Длина заголовка должна быть от 3 до 120 символов")
-    @NotNull(message = "Заголовок не может быть пустым")
     @NotBlank(message = "Заголовок не может быть пустым")
     private String title;
 }
